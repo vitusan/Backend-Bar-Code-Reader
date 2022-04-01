@@ -1,0 +1,13 @@
+export enum CategoriasEnum {
+
+    BOMBONIERE ='BOMBONIERE',
+    BEBIDA_ALCOOLICA = 'BEBIDA ALCOOLICA',
+    BEBIDA_SEM_ALCOOL = 'BEBIDA SEM ALCOOL',
+    CHURRASCO = 'CHURRASCO',
+    USO_PESSOAL = 'USO PESSOAL',
+    SNACKS = 'SNACKS',
+    ACAI = 'ACAI',
+    SORVETE = 'SORVETE'
+    
+  }
+  

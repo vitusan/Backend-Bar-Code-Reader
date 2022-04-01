@@ -10,7 +10,7 @@ async function bootstrap() {
   if (configService.get('ENABLE_CORS') === 'true') {
     const corsOptions = {
       origin: '*',
-      methods: 'GET',
+      methods: ['GET','POST'],
       preflightContinue: false,
       optionsSuccessStatus: 204,
       credentials: false,

@@ -1,8 +1,14 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import * as fs from 'fs';
+import * as XLSX from 'xlsx';
 import { CosmosInterface } from '../interface/cosmos.interface';
 import { AnswerInterface } from './../interface/answer.interface';
+import { ProductInterface } from './../interface/product.interface';
+import * as path from 'path';
+import { createReadStream } from 'fs';
+import { DownloadXLSXDto } from '../dto/downloadXLSX.dto';
 
 @Injectable()
 export class CoreService {
@@ -36,18 +42,32 @@ export class CoreService {
         }
     }
 
-    async createCsvFile(): Promise<any> {
-        // const csvWriter = createCsvWriter({
-        //     path: 'out.csv',
-        //     header: [
-        //       { id: 'fabricante', title: 'Fabricante' },
-        //       { id: 'categoria', title: 'Categoria' },
-        //       { id: 'nome', title: 'Nome' },
-        //       { id: 'barCode', title: 'Código de Barras' },
-        //       { id: 'price', title: 'Preço de custo' },
-        //     ],
-        //     append: true
-        //   });
-        // return await csvWriter.writeRecords([data]);
+    async createXlsxFile(dto: DownloadXLSXDto): Promise<fs.ReadStream> {
+        try {
+            const wb = XLSX.utils.book_new();
+            wb.Props = {
+                Author: `DynBox`,
+                Company: 'Dynbox Smart Store',
+                Title: 'Scans',
+                Subject: 'Produtos Escaneados'
+            };
+            const productData = dto.products.map((product) => {
+                return {
+                    "Fabricante": product.fabricante,
+                    "Categoria": product.categoria,
+                    "Nome": product.nome,
+                    "Código de Barras": product.barCode,
+                    "Preço de custo": product.price
+                }
+            });
+            const workSheet = XLSX.utils.json_to_sheet(productData);
+            XLSX.utils.book_append_sheet(wb, workSheet, 'Scans');
+            XLSX.writeFile(wb, path.join(__dirname, `../../../src/core/tmp/scans.xlsx`));
+            return createReadStream(path.join(__dirname, `../../../src/core/tmp/scans.xlsx`)).once('close', () => {
+                fs.unlinkSync(path.join(__dirname, `../../../src/core/tmp/scans.xlsx`));
+            });
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 }
