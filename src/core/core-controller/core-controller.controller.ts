@@ -26,10 +26,6 @@ export class CoreController {
         @Response({ passthrough: true }) res
     ) {
         const result = await this.coreService.createXlsxFile(dto);
-        // res.set({
-        //     'Content-Type': 'application/pdf',
-        //     'Content-Disposition': `attachment; filename="${'id'}.pdf"`,
-        // });
         return new StreamableFile(result);
     }
 
