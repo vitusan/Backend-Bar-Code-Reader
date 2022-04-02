@@ -17,6 +17,7 @@ export class CoreController {
     ) {
         const data = await this.coreService.consultarApis(codigoDeBarras);
         return new ResponseDto(true, data);
+
     }
 
     @Post('download-XLSX')
@@ -27,6 +28,7 @@ export class CoreController {
     ) {
         const result = await this.coreService.createXlsxFile(dto);
         return new StreamableFile(result);
+        
     }
 
 }
