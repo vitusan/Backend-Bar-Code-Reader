@@ -62,6 +62,7 @@ export class CoreService {
             });
             const workSheet = XLSX.utils.json_to_sheet(productData);
             XLSX.utils.book_append_sheet(wb, workSheet, 'Scans');
+            fs.writeFileSync(path.join(__dirname, `../../../src/core/tmp/scans.xlsx`), undefined);
             XLSX.writeFile(wb, path.join(__dirname, `../../../src/core/tmp/scans.xlsx`));
             return createReadStream(path.join(__dirname, `../../../src/core/tmp/scans.xlsx`)).once('close', () => {
                 fs.unlinkSync(path.join(__dirname, `../../../src/core/tmp/scans.xlsx`));
